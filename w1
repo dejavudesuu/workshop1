@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>從手相、紫微斗數、塔羅🔮學識同AI傾計 - 互動工作坊網頁</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+HK:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans HK', sans-serif;
+            background-color: #FDFBF6;
+            color: #3C3633;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #E0A75E;
+            border-bottom-color: #E0A75E;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAE0D5;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .prompt-card {
+            background-color: #F9F5F0;
+        }
+        .copy-btn {
+            background-color: #E0A75E;
+            color: #FFFFFF;
+            transition: background-color 0.3s;
+        }
+        .copy-btn:hover {
+            background-color: #C79653;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            max-width: 300px;
+            margin: auto;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #E0A75E;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-[#FDFBF6]/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-xl font-bold text-[#776B5D]">AI占卜館🔮</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#intro" class="nav-link pb-1">工作坊簡介</a>
+                <a href="#analogy" class="nav-link pb-1">三大心法</a>
+                <a href="#practice" class="nav-link pb-1">實戰演練</a>
+                <a href="#compare" class="nav-link pb-1">提示對比</a>
+                <a href="#lab" class="nav-link pb-1">AI命理實驗室</a>
+                <a href="#limits" class="nav-link pb-1">AI的極限</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md py-2 px-3 text-[#3C3633] focus:outline-none focus:ring-2 focus:ring-[#E0A75E]">
+                    <option value="#intro">工作坊簡介</option>
+                    <option value="#analogy">三大心法</option>
+                    <option value="#practice">實戰演練</option>
+                    <option value="#compare">提示對比</option>
+                    <option value="#lab">AI命理實驗室</option>
+                    <option value="#limits">AI的極限</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="intro" class="text-center pt-16 -mt-16 mb-24">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-[#776B5D]">從手相、紫微斗數、塔羅🔮</h1>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 text-[#E0A75E]">學識同AI傾計</h2>
+            <p class="max-w-3xl mx-auto text-lg text-[#3C3633] mb-12">
+                歡迎來到今天的互動工作坊！在這個1.5小時的旅程中，我們將以輕鬆有趣的方式，探索古老的占卜智慧如何與現代人工智能碰撞。您將學會如何像與一位經驗豐富的命理師對話一樣，透過精準的「提示工程 (Prompt Engineering)」來引導AI，讓它成為您的數碼助手，為您提供資訊、激發創意、甚至進行模擬分析。準備好開啟您的AI占卜之旅了嗎？
+            </p>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="text-left bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-[#776B5D]">工作坊目標</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start"><span class="text-[#E0A75E] mr-2">🎯</span>以生動有趣的方式介紹AI及聊天機械人的基本概念。</li>
+                        <li class="flex items-start"><span class="text-[#E0A75E] mr-2">🎯</span>透過占卜作類比，幫助理解如何與AI有效溝通。</li>
+                        <li class="flex items-start"><span class="text-[#E0A75E] mr-2">🎯</span>提供實際操作機會，讓學員體驗與AI互動。</li>
+                        <li class="flex items-start"><span class="text-[#E0A75E] mr-2">🎯</span>啟發對AI的興趣，並了解其潛力與限制。</li>
+                    </ul>
+                </div>
+                <div class="chart-container">
+                    <canvas id="timeAllocationChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mt-16 text-left max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-2xl font-bold mb-4 text-[#776B5D]">破冰與暖場：你的「AI占卜」初印象</h3>
+                <p class="text-lg text-gray-700 mb-4">
+                    在我們正式開始之前，讓我們先來一個小小的破冰環節！請思考以下問題，並在心中給出你的答案：
+                </p>
+                <ul class="list-disc list-inside text-gray-700 mb-6 space-y-2">
+                    <li>**快速問答 1：** 你最想問占卜師或AI一個什麼問題？</li>
+                    <li>**快速問答 2：** 你認為AI最像哪一種占卜工具？（手相、紫微斗數、塔羅牌）為什麼？</li>
+                </ul>
+                <p class="text-lg text-gray-700 mb-4">
+                    現在，讓我們來看看一個簡單的「AI小占卜」示範。你可以嘗試將以下提示輸入到你常用的AI聊天機械人中，看看它會給你什麼樣的「幸運箴言」：
+                </p>
+                <div class="prompt-card border border-gray-200 p-4 rounded-lg mb-4">
+                    <p class="mb-3 text-gray-700">「請用一句積極簡短的話，作為我今天的幸運箴言。」</p>
+                    <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    <p class="text-sm text-gray-500 mt-2">預期AI回應範例：「今天你將發現一個被忽略的細節，帶來意想不到的啟發。」</p>
+                </div>
+                <p class="text-lg text-gray-700">
+                    這個小活動旨在幫助大家放鬆心情，同時初步感受AI的互動性。
+                </p>
+            </div>
+
+            <div class="mt-16 text-left max-w-4xl mx-auto">
+                <h3 class="text-2xl font-bold mb-4 text-[#776B5D]">AI其實唔難：你嘅新世代聊天夥伴</h3>
+                <p class="text-lg text-gray-700 mb-4">
+                    很多人聽到人工智能 (AI) 就覺得很複雜，但其實AI離我們生活很近。簡單來說，AI就像一個不斷學習的學徒，透過海量的資料學習如何理解人類語言並作出回應。我們今天主要會接觸的是**「生成式AI (Generative AI)」**，特別是像ChatGPT、Gemini這類**「大型語言模型 (Large Language Models, LLMs)」**。它們的厲害之處在於能像人一樣對話、寫作，甚至生成圖像。
+                </p>
+                <p class="text-lg text-gray-700 mb-6">
+                    AI聊天機械人的運作原理可以簡化為一個循環：你輸入問題 (Input) -> AI 進行分析處理 (Process) -> AI 生成答案 (Output)。想像一下，這個AI學徒讀遍了世界上所有的書，聽過所有人的對話，所以它才能回答你的問題。它沒有情感，但它能理解關於情感的文字模式，並給出基於知識的回應。例如，您的手機語音助手、網購推薦系統，甚至是智能家居設備，都是AI在日常生活中應用。
+                </p>
+                <div class="flex justify-center items-center gap-4 text-xl font-semibold text-[#E0A75E]">
+                    <span>輸入 (Input)</span>
+                    <span>➡️</span>
+                    <span>處理 (Process)</span>
+                    <span>➡️</span>
+                    <span>輸出 (Output)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="analogy" class="pt-24 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#776B5D]">三大核心心法</h2>
+                <p class="text-lg text-gray-600 mt-2">以占卜智慧，解構與AI溝通的藝術</p>
+                <p class="max-w-3xl mx-auto text-lg text-[#3C3633] mt-4">
+                    占卜和AI看似風馬牛不相及，但它們在核心原理上卻有著驚人的相似之處。無論是占卜還是與AI聊天，都涉及提出問題、透過特定系統處理，最終獲得資訊。今天，我們將深入探討手相、紫微斗數和塔羅牌這三種占卜形式，如何幫助我們理解與AI有效溝通的關鍵。
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-3xl mr-3">🖐️</span>手相：AI的閱人術</h3>
+                    <p class="mb-4 text-gray-600">手相師的功力在於『觀人於微』，他們會細讀掌紋的**生命線 (Life Line), 智慧線 (Head Line), 感情線 (Heart Line)** 等主線的**長短、深淺、清晰度**，以及**掌丘 (Mounts)** 的飽滿度，從中推斷個性、潛能與生命軌跡。手相強調對**細微特徵的觀察與歸納**。</p>
+                    <p class="mb-4 text-gray-600">AI 解讀你的文字「紋路」。就像手相師看掌紋的深淺、長短、交叉，AI看你Prompt的**詞彙選擇、語氣、句式結構、資訊密度、甚至潛在的情緒表達**，從中判斷你的『內在紋路』和真正意圖。這其實是AI在分析你輸入的**「語義 (Semantics)」**和**「意圖 (Intent)」**，並進行**「情感分析 (Sentiment Analysis)」**或**「主題建模 (Topic Modeling)」**。</p>
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-md">
+                        <p class="font-semibold text-amber-800">核心啟示：</p>
+                        <p class="text-amber-700">細節是AI理解你的「生命線」。Prompt越具體，AI的回應越貼心。**細節決定成敗。**</p>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-3xl mr-3">⭐</span>紫微斗數：AI的運算邏輯</h3>
+                    <p class="mb-4 text-gray-600">紫微斗數的精髓在於其複雜而精密的『推算』系統。它要求提供**精確的生辰八字（年、月、日、時）**和**出生地點**，這些是構成命盤的**「基礎數據點」**。命盤中包含**十二宮位**（如命宮、財帛宮、事業宮、夫妻宮等），以及**主星（如紫微、天府、七殺）和輔星（如文昌、文曲、左輔、右弼）**的**落位和組合**，它們之間有著複雜的**「飛星」和「四化（化祿、化權、化科、化忌）」**等**「定義」和「組合規則」**。紫微斗數的推演高度依賴**結構化數據和嚴謹的邏輯推算**。</p>
+                    <p class="mb-4 text-gray-600">AI模型有大量參數（如同星曜）。你的「提問」（Prompt Engineering）就像啟動特定「排盤規則」和「運算公式」，引導AI針對具體問題推導出合理的結構化答案。這過程涉及AI對資訊的**「結構化處理 (Structured Processing)」**、**「邏輯推理 (Logical Reasoning)」**，以及**「知識圖譜 (Knowledge Graph)」**的應用。</p>
+                    <div class="bg-sky-50 border border-sky-200 p-4 rounded-md">
+                        <p class="font-semibold text-sky-800">核心啟示：</p>
+                        <p class="text-sky-700">精確的指令是AI進行「推演」的關鍵。要求格式、角色，能獲得更結構化的答案。**精確的指令是AI『推演命運』的關鍵。**</p>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold mb-4 flex items-center"><span class="text-3xl mr-3">🃏</span>塔羅：AI的情境設定</h3>
+                    <p class="mb-4 text-gray-600">塔羅牌的魅力在於其豐富的『牌義』和靈活的『解讀』。塔羅師會根據所抽牌的**正逆位**、**牌面圖像（如愚者、魔術師、高塔等）**、以及**牌陣（如聖三角、凱爾特十字）**來進行多層次的解讀，並將其與問卜者的情境結合。塔羅牌更側重於**直覺、象徵意義和潛意識的啟發**，強調從多個角度和情境中尋找意義。</p>
+                    <p class="mb-4 text-gray-600">「向AI提問」如「抽塔羅牌」。你提出的問題（牌陣）引導AI回應方向（解牌）。不同提問方式，引出AI不同「牌義解讀」。AI非全知，但能綜合資訊給予啟發性回應。**塔羅牌的『牌義』是固定的，但『解讀』是靈活的。AI的回應也是如此，它基於既有知識，但你的提問引導了它的『解讀角度』。這就是我們常說的「提示框架 (Prompt Framework)」或「情境設定 (Context Setting)」。**</p>
+                     <div class="bg-rose-50 border border-rose-200 p-4 rounded-md">
+                        <p class="font-semibold text-rose-800">核心啟示：</p>
+                        <p class="text-rose-700">情境設定是AI產生「靈感」的來源。好的情境能讓AI的回答更具創意和人性化。**情境設定是AI『靈感』的來源。**</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <h3 class="text-2xl font-bold text-[#E0A75E]">共通點總結：問對問題是關鍵！</h3>
+                <p class="text-lg text-gray-700 mt-4 max-w-3xl mx-auto">
+                    總結來說，無論是占卜還是與AI聊天，核心都在於**「問對問題」**。問題的質量，直接決定了你得到的答案的質量！我們今天學到的這些概念，如理解**語義和意圖**、要求**結構化處理**、以及進行**情境設定**，都是**提示工程 (Prompt Engineering)** 的核心要素。掌握這些技巧，將使您與AI的互動更加高效和有價值。
+                </p>
+            </div>
+        </section>
+
+        <section id="practice" class="pt-24 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#776B5D]">實戰演練：AI「神算」初體驗</h2>
+                <p class="text-lg text-gray-600 mt-2">動手玩，體驗三種提問方式的力量</p>
+                <p class="max-w-3xl mx-auto text-lg text-[#3C3633] mt-4">
+                    現在是時候將理論付諸實踐了！在這個環節中，您將有機會親自動手，向AI聊天機械人提問。我們將引導您嘗試三種不同的提問方式，每種方式都對應著一種占卜的「心法」。請準備好您的設備，開啟AI聊天平台，讓我們一起探索AI的無限可能！
+                </p>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold mb-4 text-[#E0A75E]">動手玩 1：「塔羅式」提問 - 開放性探索</h3>
+                <p class="text-gray-700 mb-6">此環節旨在鼓勵您提出開放性問題，像塔羅牌一樣，從AI的回應中尋找啟發、創意和新的視角。重點在於探索和發散思維，不預設特定答案，而是讓AI提供多樣化的可能性。這類Prompt我們稱為**開放式Prompt (Open-ended Prompt)**。</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「我對『內在小孩』這個概念感到好奇，AI可以從一個全新的角度來解釋它嗎？」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「請為我生成三個關於『如何面對不確定性』的啟發性問題，幫助我自我反思。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「請AI為我描述一個理想的『心靈平靜』的場景，越詳細越好，包含視覺、聽覺和嗅覺的元素。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「如果我的壓力是一個具象化的怪物，AI會如何描述它，以及如何想像擊敗它的方法？」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold mb-4 text-[#E0A75E]">動手玩 2：「紫微斗數式」提問 - 精準與結構</h3>
+                <p class="text-gray-700 mb-6">此環節重點在於如何向AI提出明確、具體的要求，並指定輸出格式，以獲得像紫微斗數般精準和結構化的資訊。這考驗您對**「指令清晰度 (Instruction Clarity)」**的掌握，讓AI能夠進行**「結構化處理 (Structured Processing)」**和**「邏輯推理 (Logical Reasoning)」**。</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「請比較『正念冥想』和『引導式冥想』的異同，並列出它們各自適合的人群，要求以**表格形式**呈現。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「請AI為我設計一個為期七天的『感恩日記』練習計劃，每天提供一個不同的寫作主題，並要求包含**每日反思問題 (Daily Reflection Questions)**。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「我希望改善我的睡眠品質。請AI提供一個包含三個步驟的睡前放鬆流程，並說明每個步驟的目的，要求以**數字順序列表 (Numbered List)** 呈現。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                    <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                        <p class="mb-3 text-gray-700">「請AI分析『積極傾聽』在人際溝通中的重要性，並提供三個具體的練習方法。」</p>
+                        <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-bold mb-4 text-[#E0A75E]">動手玩 3：「手相式」提問 - 個性化與追問</h3>
+                <p class="text-gray-700 mb-6">此環節鼓勵您像手相師般，透過多輪對話和追問，深入挖掘AI的回應，讓資訊更貼合您的個人情境。這考驗您的**「迭代式提問 (Iterative Prompting)」**能力，利用AI的**「上下文 (Context)」**理解能力，逐步引導AI提供更精確、更個性化的答案。</p>
+                 <div class="bg-white border border-gray-200 p-6 rounded-lg">
+                    <p class="font-semibold mb-2">場景：改善與家人的溝通</p>
+                    <div class="space-y-4">
+                        <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                            <p class="font-medium text-gray-500 text-sm">第一輪提問：</p>
+                            <p class="mb-3 text-gray-700">「我希望改善與家人的溝通，AI有什麼技巧可以分享？」</p>
+                            <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                        </div>
+                        <div class="pl-6 border-l-2 border-[#E0A75E]">
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                                <p class="font-medium text-gray-500 text-sm">第二輪追問 (迭代)：</p>
+                                <p class="mb-3 text-gray-700">「如果家人對我的建議不感興趣，我該如何應對？有沒有一些**非暴力溝通 (Nonviolent Communication)** 的方法可以嘗試？或者如何運用**同理心 (Empathy)**？」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white border border-gray-200 p-6 rounded-lg mt-6">
+                    <p class="font-semibold mb-2">場景：克服睡眠困擾</p>
+                    <div class="space-y-4">
+                        <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                            <p class="font-medium text-gray-500 text-sm">第一輪提問：</p>
+                            <p class="mb-3 text-gray-700">「我總是在睡前想很多事情，導致難以入睡，AI有什麼方法可以幫助我？」</p>
+                            <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                        </div>
+                        <div class="pl-6 border-l-2 border-[#E0A75E]">
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg">
+                                <p class="font-medium text-gray-500 text-sm">第二輪追問 (迭代)：</p>
+                                <p class="mb-3 text-gray-700">「如果我嘗試了『數羊』，但效果不佳，還有其他更具體、更創新的方法嗎？例如，有沒有關於**睡眠衛生 (Sleep Hygiene)** 的建議？或者**漸進式肌肉放鬆 (Progressive Muscle Relaxation)**？」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="compare" class="pt-24 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#776B5D]">提示工程實例對比：好與壞的提示</h2>
+                <p class="text-lg text-gray-600 mt-2">一字之差，效果千里！理解提示的精準性與情境設定。</p>
+                <p class="max-w-3xl mx-auto text-lg text-[#3C3633] mt-4">
+                    這個環節將透過具體的「好」與「壞」提示對比，讓您直觀感受提示工程的巨大影響力。一個精心設計的Prompt，能讓AI從茫茫知識中精準捕捉您的意圖，並提供更具價值、更符合您需求的答案。這就像占卜師在獲得清晰的提問後，才能給出更具體的指引。
+                </p>
+            </div>
+            <div class="grid md:grid-cols-1 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-[#E0A75E]">手相式對比：細節的魔力</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">❌ 壞提示 (Bad Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「請幫我分析我的性格。」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：非常籠統，可能只給出普遍的性格描述，缺乏個性化，例如：「您可能是一個複雜的人，具有多方面的性格特質。」</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">✅ 好提示 (Good Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「請扮演一位心理分析師，根據以下性格描述，分析我可能面臨的**潛在優勢**和**挑戰**，並提供一個**簡要的自我提升建議**：『我是一個內向但富有同情心的人，在陌生環境中會感到焦慮，但在熟悉的人面前很健談。』」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：針對性分析內向與同情心的優勢，指出焦慮與健談的挑戰，並提供具體建議，例如：「您的同情心是人際關係中的優勢，但內向和焦慮可能限制您在陌生環境中的表達。建議您從小群體開始練習社交，逐漸擴大舒適圈。」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-[#776B5D]">紫微斗數式對比：結構的力量</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">❌ 壞提示 (Bad Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「給我一些關於時間管理的資訊。」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：大量通用資訊，難以找到重點或應用方向，例如：「時間管理很重要，可以幫助你提高效率，減少壓力。常見方法有番茄工作法、GTD等。」</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">✅ 好提示 (Good Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「請扮演一位效率專家，為我列出三個針對『拖延症』的有效時間管理技巧，並為每個技巧提供一個**具體實踐步驟**，要求以**數字順序列表**呈現。」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：針對拖延症的具體技巧，以清晰的數字列表呈現，易於理解和執行，例如：「1. **五分鐘法則：** 承諾只做5分鐘，通常會發現能繼續。2. **任務分解：** 將大任務拆解成小步驟。3. **番茄工作法：** 25分鐘工作，5分鐘休息。」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-2xl font-bold mb-4 text-[#776B5D]">塔羅式對比：情境的引導</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">❌ 壞提示 (Bad Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「寫一個關於勇氣的故事。」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：故事內容可能過於通用或不符合預期風格，例如：「一個年輕人勇敢地挑戰了巨龍，最終拯救了公主。」</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-semibold mb-2 text-gray-800">✅ 好提示 (Good Prompt)</p>
+                            <div class="prompt-card border border-gray-200 p-4 rounded-lg h-full flex flex-col justify-between">
+                                <p class="mb-3 text-gray-700">「請扮演一位童話作家，為一位在學業上遇到挫折的小朋友，寫一個關於『從失敗中找到勇氣』的**寓言故事**，故事主角是一隻小動物，字數約250字，語氣要**溫暖鼓勵**。」</p>
+                                <button class="copy-btn text-sm py-1 px-3 rounded-full" onclick="copyPrompt(this)">複製提示</button>
+                                <p class="text-sm text-gray-500 mt-2">預期回應：故事風格、對象、主題明確，更具啟發性和針對性，例如：「小兔子跳遠比賽失敗了，它很難過。但媽媽告訴它，每次跌倒都是為了跳得更高。小兔子擦乾眼淚，繼續練習，最終成為了森林裡最棒的跳遠選手。」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lab" class="pt-24 -mt-16 mb-24 bg-white p-8 rounded-lg shadow-sm border border-gray-200">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#776B5D]">進階應用：AI的模擬與深度分析</h2>
+                <p class="text-lg text-gray-600 mt-2 max-w-2xl mx-auto">
+                    這個環節將展示AI如何處理複雜的占卜知識體系，並進行**模擬與深度分析**。AI在此充當**「知識檢索系統 (Knowledge Retrieval System)」**、**「內容生成器 (Content Generator)」**和**「模式識別工具 (Pattern Recognition Tool)」**的角色，而非真實的預測或靈性能力。它會根據您提供的「虛擬命盤」或「虛擬牌陣」描述，結合其知識圖譜，生成一個符合該占卜體系邏輯的解釋，並提供更深層次的分析。
+                </p>
+            </div>
+            <div class="space-y-8">
+                <div class="bg-white p-6 rounded-lg border border-gray-200">
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">🖐️ 手相「模式分析」✨</h4>
+                    <p class="mb-4 text-gray-700">請輸入您的掌紋描述（例如：生命線深長，智慧線與感情線分開，感情線末端有分叉）：</p>
+                    <textarea id="handReadingInput" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-[#E0A75E]" rows="4" placeholder="我的生命線深長清晰，智慧線與感情線分開，智慧線較長且直，感情線末端有分叉。"></textarea>
+                    <button class="copy-btn py-2 px-4 rounded-full font-semibold" onclick="analyzeHandReading()">向AI發問 ✨</button>
+                    <div id="handReadingSpinner" class="loading-spinner"></div>
+                    <div id="handReadingOutput" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border border-gray-200">
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">⭐ 紫微斗數「星曜組合影響分析」✨</h4>
+                    <p class="mb-4 text-gray-700">請輸入您的命宮主星組合描述（例如：命宮主星為廉貞破軍，化忌入夫妻宮，福德宮見天同）：</p>
+                    <textarea id="ziWeiDouShuInput" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-[#E0A75E]" rows="4" placeholder="命宮主星為廉貞破軍，化忌入夫妻宮，福德宮見天同。"></textarea>
+                    <button class="copy-btn py-2 px-4 rounded-full font-semibold" onclick="analyzeZiWeiDouShu()">向AI發問 ✨</button>
+                    <div id="ziWeiDouShuSpinner" class="loading-spinner"></div>
+                    <div id="ziWeiDouShuOutput" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg border border-gray-200">
+                    <h4 class="text-xl font-semibold mb-3 text-gray-800">🃏 塔羅「牌陣情境分析」✨</h4>
+                    <p class="mb-4 text-gray-700">請輸入您的塔羅牌陣情境和牌面描述（例如：情境是『我對未來感到迷茫，特別是關於一個新的學習機會』，抽到三張牌分別是：過去『權杖三正位』，現在『聖杯五逆位』，未來『星星正位』）：</p>
+                    <textarea id="tarotInput" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:ring-2 focus:ring-[#E0A75E]" rows="4" placeholder="情境是『我對未來感到迷茫，特別是關於一個新的學習機會』，抽到三張牌分別是：過去『劍八正位』，現在『力量逆位』，未來『審判正位』。"></textarea>
+                    <button class="copy-btn py-2 px-4 rounded-full font-semibold" onclick="analyzeTarot()">向AI發問 ✨</button>
+                    <div id="tarotSpinner" class="loading-spinner"></div>
+                    <div id="tarotOutput" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 text-gray-700 whitespace-pre-wrap"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="limits" class="pt-24 -mt-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-[#776B5D]">AI 的「神通」與「局限」</h2>
+                <p class="text-lg text-gray-600 mt-2">負責任地使用，保持批判性思考</p>
+                <p class="max-w-3xl mx-auto text-lg text-[#3C3633] mt-4">
+                    AI作為一個強大的工具，擁有令人驚嘆的潛力，但同時也存在著重要的局限性。理解這些「神通」與「局限」，是我們負責任地使用AI，並從中獲取最大價值的關鍵。就像占卜結果提供指引，但並非絕對真理，AI的回應也需要我們保持批判性思考。
+                </p>
+            </div>
+             <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-sm border border-gray-200 grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold text-green-600 mb-3">✅ AI 的神通 (Potentials)</h3>
+                    <ul class="space-y-2">
+                        <li>- 強大的資訊獲取與整合</li>
+                        <li>- 高效的創意生成與草擬</li>
+                        <li>- 解決複雜問題的輔助工具</li>
+                        <li>- 個性化的學習與探索夥伴</li>
+                        <li>- **模式識別 (Pattern Recognition):** 從海量數據中找出規律</li>
+                        <li>- **知識檢索 (Knowledge Retrieval):** 快速提取相關知識</li>
+                        <li>- **語義理解 (Semantic Understanding):** 深入理解語言含義</li>
+                        <li>- **多模態處理 (Multimodal Processing):** (未來趨勢) 處理文字、圖像、聲音等多元資訊</li>
+                    </ul>
+                </div>
+                <div>
+                     <h3 class="text-xl font-bold text-red-600 mb-3">⚠️ AI 的局限 (Limitations)</h3>
+                    <ul class="space-y-2">
+                        <li>- **幻覺 (Hallucination):** 可能生成不實資訊，尤其在知識邊緣或被誤導時</li>
+                        <li>- **數據偏見 (Data Bias):** 回應可能帶有訓練數據中的偏見，影響公平性</li>
+                        <li>- **缺乏真情實感:** 沒有真正的理解、情感或意識，無法提供人類獨有的共情和直覺</li>
+                        <li>- **上下文限制:** 對話歷史記憶有限，超出**上下文窗口 (Context Window)** 的資訊會被遺忘</li>
+                        <li>- **無法進行真實預測:** 僅基於歷史數據和模式進行推斷，不具備預知未來能力</li>
+                        <li>- **隱私與安全風險:** 處理敏感資訊時需謹慎，存在數據洩露風險</li>
+                        <li>- **道德與倫理問題:** 如版權、深度偽造 (Deepfake) 等，需要使用者負責任地判斷</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-8 mt-16 border-t border-gray-200">
+        <p class="text-gray-500">&copy; 2025 AI占卜館。僅供教學與娛樂用途。</p>
+    </footer>
+
+    <script>
+        // Chart.js implementation
+        window.onload = function() {
+            const ctx = document.getElementById('timeAllocationChart').getContext('2d');
+            const timeAllocationChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['概念連結', '實戰演練', '總結與展望'],
+                    datasets: [{
+                        label: '時間分配 (分鐘)',
+                        data: [30, 50, 25],
+                        backgroundColor: [
+                            'rgba(224, 167, 94, 0.7)', // #E0A75E
+                            'rgba(119, 107, 93, 0.7)', // #776B5D
+                            'rgba(210, 180, 140, 0.7)'  // A lighter tan
+                        ],
+                        borderColor: [
+                            '#E0A75E',
+                            '#776B5D',
+                            '#D2B48C' 
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        title: {
+                            display: true,
+                            text: '工作坊時間分配 (105分鐘)',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Copy to clipboard function
+        function copyPrompt(button) {
+            const promptText = button.previousElementSibling.innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = promptText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            const originalText = button.innerText;
+            button.innerText = '已複製！';
+            setTimeout(() => {
+                button.innerText = originalText;
+            }, 1500);
+        }
+
+        // Mobile navigation
+        document.getElementById('mobile-nav').addEventListener('change', function(e) {
+            const sectionId = e.target.value;
+            window.location.hash = sectionId;
+        });
+
+        // Active nav link highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Gemini API Integration Functions
+        const API_KEY = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+
+        async function callGeminiAPI(prompt, outputElementId, spinnerElementId) {
+            const outputElement = document.getElementById(outputElementId);
+            const spinnerElement = document.getElementById(spinnerElementId);
+
+            outputElement.innerText = ''; // Clear previous output
+            spinnerElement.style.display = 'block'; // Show spinner
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    outputElement.innerText = text;
+                } else {
+                    outputElement.innerText = 'AI 回應結構異常或無內容。';
+                    console.error('API response structure unexpected:', result);
+                }
+            } catch (error) {
+                outputElement.innerText = `AI 服務錯誤：${error.message}`;
+                console.error('Error calling Gemini API:', error);
+            } finally {
+                spinnerElement.style.display = 'none'; // Hide spinner
+            }
+        }
+
+        async function analyzeHandReading() {
+            const userInput = document.getElementById('handReadingInput').value;
+            if (!userInput.trim()) {
+                document.getElementById('handReadingOutput').innerText = '請輸入您的掌紋描述。';
+                return;
+            }
+            const prompt = `請扮演一位經驗豐富的手相師，根據以下描述，為我分析可能代表的潛在性格衝突和應對建議，並從內在矛盾和健康警示兩個面向進行分析，提供簡要的改善方向：\n\n${userInput}`;
+            await callGeminiAPI(prompt, 'handReadingOutput', 'handReadingSpinner');
+        }
+
+        async function analyzeZiWeiDouShu() {
+            const userInput = document.getElementById('ziWeiDouShuInput').value;
+            if (!userInput.trim()) {
+                document.getElementById('ziWeiDouShuOutput').innerText = '請輸入您的命宮主星組合描述。';
+                return;
+            }
+            const prompt = `請扮演一位紫微斗數命理師，根據以下命宮主星組合，分析其在人際關係和情緒管理上可能面臨的挑戰與優勢，並以條列式呈現挑戰與優勢，提供簡要的星曜組合影響：\n\n${userInput}`;
+            await callGeminiAPI(prompt, 'ziWeiDouShuOutput', 'ziWeiDouShuSpinner');
+        }
+
+        async function analyzeTarot() {
+            const userInput = document.getElementById('tarotInput').value;
+            if (!userInput.trim()) {
+                document.getElementById('tarotOutput').innerText = '請輸入您的塔羅牌陣情境和牌面描述。';
+                return;
+            }
+            const prompt = `請扮演一位塔羅師，分析這組塔羅牌在『面對未知挑戰』情境下，可能暗示的心理狀態變化和潛在應對策略：\n\n${userInput}\n\n請以情境分析的方式，提供心理層面的洞察和具體的行動建議。`;
+            await callGeminiAPI(prompt, 'tarotOutput', 'tarotSpinner');
+        }
+    </script>
+</body>
+</html>
